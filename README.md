@@ -11,9 +11,15 @@ This template will deploy and configure a Windows Server 2016 TP4 core VM instan
 
 - Deploy the TP4 Windows Server Container Image.
 - Create inbound network security group rules for HTTP, RDP and Docker.
-- Create inbound Windows Firewall rules for HTTP and Docker (custom script extensions).
-- Modify the Docker Daemon configuration file to listen for incoming requests on port 2375 (custom script extension).
+- Create inbound Windows Firewall rule for Docker (custom script extensions).
 
 Windows Server 2016 TP4 and Windows Server Container are in an early preview release and are not production ready and or supported.
 
 > Microsoft Azure does not support Hyper-V containers. To complete Hyper-V Container exercises, you need an on-prem container host.
+
+## azure-cli
+
+```
+azure config mode arm
+azure group deployment create Group docker-tp4 --template-uri https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/azuredeploy.json -p '{ "adminUsername": {"value": "docker"}, "adminPassword": {"value": "Super$ecretPass123"}, "dnsNameForPublicIP": {"value": "docker-tp4"}, "VMName": {"value": "docker-tp4"}, "location": {"value": "North Europe"}}'
+```
