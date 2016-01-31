@@ -11,6 +11,9 @@
         "VMName": {
             "value": "VMName"
         },
+        "GitHubUsername": {
+            "value": ""
+        },
         "adminPassword": {
             "value": "password"
         },
