@@ -34,6 +34,16 @@ azure group deployment create Group docker-tp4 \
     }'
 ```
 
+To retrieve the IP address or the FQDN use these commands
+
+```bash
+$ azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3
+1.2.3.4
+
+$ azure vm show Group docker-tp4 | grep FQDN | cut -d : -f 3 | head -1
+docker-tp4.northeurope.cloudapp.azure.com
+```
+
 ## Credits
 
 This work is based on the Azure quickstart templates
