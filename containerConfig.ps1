@@ -10,6 +10,8 @@ param
 (
     [Parameter(Mandatory = $true)]
     [string] $HostName
+
+    [string] $GitHubUsername
 )
 
 $DockerConfig = 'C:\ProgramData\Docker\runDockerDaemon.cmd'
@@ -20,34 +22,28 @@ if (!(Get-NetFirewallRule | where {$_.Name -eq "Docker"})) {
     New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2376 -Action Allow -Enabled True
 }
 
-# Install OpenSSL
-# see also http://blogsprajeesh.blogspot.de/2015/09/docker-for-windows-on-azure-vm-securing.html
-Start-Process .\Win64OpenSSL_Light-1_0_2f.exe -ArgumentList '/silent /verysilent /sp- /suppressmsgboxes' -Wait
-$env:OPENSSL_CONF = "C:\OpenSSL-Win64\bin\openssl.cfg"
-$opensslExe = "C:\OpenSSL-Win64\bin\openssl.exe"
+if (!(Get-NetFirewallRule | where {$_.Name -eq "SSH"})) {
+    New-NetFirewallRule -Name "SSH" -DisplayName "SSH" -Protocol tcp -LocalPort 22 -Action Allow -Enabled True
+}
 
-#$CertLocation = "C:\ProramData\Docker"
-#$env:RANDFILE = Join-Path $CertLocation ".rnd"
-#& $opensslExe genrsa -aes256 -out ca-key.pem 2048
-#& $opensslExe req -new -x509 -days 365 -key ca-key.pem -subj "/C=NL/ST=UT/L=Amersfoort/O=Prajeesh" -sha256 -out ca.pem
-#& $opensslExe genrsa -aes256 -out server-key.pem 2048
-#& $opensslExe req -subj "/C=NL/ST=UT/L=Amersfoort/O=Prajeesh" -new -key server-key.pem -out server.csr
-#"subjectAltName = IP:10.10.10.20,IP:127.0.0.1,DNS.1:*.cloudapp.net,DNS.2:*.*.cloudapp.azure.com" | Out-File extfile.cnf -Encoding ASCII
-#& $opensslExe x509 -req -days 365 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
-#& $opensslExe genrsa -out client-key.pem 2048
-#& $opensslExe req -subj "/CN=client" -new -key client-key.pem -out client.csr
-#"extendedKeyUsage = clientAuth" | Out-File extfile.cnf -Encoding ASCII
-#& $opensslExe x509 -req -days 365 -in client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -extfile extfile.cnf
+# Install OpenSSH
+# see also https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH
+Expand-Archive OpenSSH-Win64.zip "C:\Program Files" -Force
+Push-Location "C:\Program Files\OpenSSH-Win64"
+.\ssh-keygen.exe -A
+cmd /c setup-ssh-lsa.cmd
+.\sshd.exe install
+Start-Service sshd
+Set-Service sshd -StartupType Automatic
+Pop-Location
 
-
-#Modify Docker Daemon Configuration
-#if (!($file = Get-Item -Path $DockerConfig)) {
-#    Write-Verbose "Docker Daemon Command File Missing" -Verbose
-#} else {
-#    $file = Get-Content $DockerConfig
-#    $file = $file -replace '^docker daemon -D -b "Virtual Switch"$','docker daemon -D -b "Virtual Switch" -H 0.0.0.0:2375'
-#    Set-Content -Path $DockerConfig -Value $file
-#}
+# Insert public SSH keys of given GitHub user
+if ($GitHubUsername -ne "") {
+  if (!(Test-Path "$env:USERPROFILE\.ssh")) {
+    mkdir "$env:USERPROFILE\.ssh"
+  }
+  wget https://api.github.com/users/$GitHubUsername/keys -UseBasicParsing | ConvertFrom-Json | foreach { $_.key } | Out-File $env:USERPROFILE\.ssh\authorized_keys -encoding ASCII -append
+}
 
 #Restart Docker Service
 #Restart-Service Docker

@@ -300,6 +300,7 @@
             "settings": {
               "fileUris": [
                 "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1",
+                "https://github.com/PowerShell/Win32-OpenSSH/releases/download/12_22_2015/OpenSSH-Win64.zip",
                 "https://slproweb.com/download/Win64OpenSSL_Light-1_0_2f.exe",
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1",
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
