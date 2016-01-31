@@ -28,6 +28,7 @@ if (!(Get-NetFirewallRule | where {$_.Name -eq "SSH"})) {
 
 # Install OpenSSH
 # see also https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH
+wget https://github.com/PowerShell/Win32-OpenSSH/releases/download/12_22_2015/OpenSSH-Win64.zip -Out OpenSSH-Win64.zip
 Expand-Archive OpenSSH-Win64.zip "C:\Program Files" -Force
 Push-Location "C:\Program Files\OpenSSH-Win64"
 .\ssh-keygen.exe -A
