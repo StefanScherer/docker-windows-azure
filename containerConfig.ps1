@@ -31,6 +31,7 @@ if (!(Get-NetFirewallRule | where {$_.Name -eq "SSH"})) {
 Expand-Archive OpenSSH-Win64.zip "C:\Program Files" -Force
 Push-Location "C:\Program Files\OpenSSH-Win64"
 .\ssh-keygen.exe -A
+copy "C:\Program Files\OpenSSH-Win64\x64\ssh-lsa.dll" C:\Windows\system32\
 cmd /c setup-ssh-lsa.cmd
 .\sshd.exe install
 Start-Service sshd
