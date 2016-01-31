@@ -24,6 +24,14 @@
       }
     },
 
+    "GitHubUsername": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "GitHub Username to retrieve public SSH keys from."
+      }
+    },
+
     "dnsNameForPublicIP": {
       "type": "string",
       "metadata": {
@@ -306,7 +314,7 @@
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
               ],
-     	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'))]"
+     	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'),' ',variables('GitHubUsername'))]"
             }
           }
         }
