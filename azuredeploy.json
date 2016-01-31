@@ -10,13 +10,6 @@
       }
     },
 
-    "newStorageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
-      }
-    },
-
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -70,13 +63,7 @@
     "addressPrefix": "10.0.0.0/16",
     "subnetName": "[concat(parameters('VMName'),'_subnet')]",
     "subnetPrefix": "10.0.0.0/24",
-    "networkSecurityGroupName": "[concat(parameters('VMName'),'_nsg')]",
-    "storageAccountType": "Standard_LRS",
-    "publicIPAddressName": "[concat(parameters('VMName'),'_pubip')]",
-    "publicIPAddressType": "Dynamic",
-    "vmStorageAccountContainerName": "vhds",
-    "apiVersion": "2015-05-01-preview",
-    "virtualNetworkName": "[concat(parameters('VMName'),'_vnet')]",
+    "nirtualNetworkName": "[concat(parameters('VMName'),'_vnet')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
   },
@@ -139,17 +126,7 @@
     },
 
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[tolower(parameters('newStorageAccountName'))]",
-      "apiVersion": "[variables('apiVersion')]",
-      "location": "[parameters('location')]",
-      "tags": {
-        "displayName": "StorageAccount"
-      },
-      "properties": {
-        "accountType": "[variables('storageAccountType')]"
-      }
-    },
+        "type": "Microsoft.Sto
 
     {
       "apiVersion": "[variables('apiVersion')]",
@@ -237,13 +214,6 @@
         "displayName": "VirtualMachine"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
-        },
         "osProfile": {
           "computername": "[parameters('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
@@ -259,13 +229,6 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          }
-        },
-        "networkProfile": {
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
