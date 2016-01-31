@@ -93,12 +93,12 @@
       "properties": {
         "securityRules": [
           {
-            "name": "HTTP",
+            "name": "SSH",
             "properties": {
-              "description": "HTTP",
+              "description": "SSH",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "80",
+              "destinationPortRange": "22",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
