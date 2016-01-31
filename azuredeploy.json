@@ -68,6 +68,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "[concat(parameters('VMName'),'_pubip')]",
     "publicIPAddressType": "Dynamic",
+    "hostDNSNameScriptArgument": "[concat('*.',resourceGroup().location,'.cloudapp.azure.com')]",
     "vmStorageAccountContainerName": "vhds",
     "apiVersion": "2015-05-01-preview",
     "virtualNetworkName": "[concat(parameters('VMName'),'_vnet')]",
@@ -119,7 +120,22 @@
               "description": "Docker",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "2375",
+              "destinationPortRange": "2376",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 300,
+              "direction": "Inbound"
+            }
+          }
+
+          {
+            "name": "WinRM",
+            "properties": {
+              "description": "WinRM",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "5986",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
@@ -283,9 +299,13 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1"
+                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1",
+                "https://slproweb.com/download/Win64OpenSSL_Light-1_0_2f.exe",
+								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1",
+								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
+								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
               ],
-              "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File containerConfig.ps1"
+     	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'))]"
             }
           }
         }
