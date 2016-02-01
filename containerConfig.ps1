@@ -24,6 +24,9 @@ function LogWrite {
 LogWrite "containerConfig.ps1"
 LogWrite "HostName = $($HostName)"
 LogWrite "GitHubUsername = $($GitHubUsername)"
+LogWrite "USERPROFILE = $($env:USERPROFILE)"
+LogWrite "pwd = $($pwd)"
+
 $DockerConfig = 'C:\ProgramData\Docker\runDockerDaemon.cmd'
 
 #Set RDP and Docker Firewall Rules:
@@ -61,3 +64,6 @@ if ($GitHubUsername -ne "") {
 #Restart-Service Docker
 
 .\ConfigureWinRM.ps1 $HostName
+
+# OpenSSH server needs a restart for ssh key based logins
+Restart-Computer
