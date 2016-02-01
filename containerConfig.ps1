@@ -53,11 +53,12 @@ Set-Service sshd -StartupType Automatic
 Pop-Location
 
 # Insert public SSH keys of given GitHub user
+$userProfile = "C:\Users\docker"
 if ($GitHubUsername -ne "") {
-  if (!(Test-Path "$env:USERPROFILE\.ssh")) {
-    mkdir "$env:USERPROFILE\.ssh"
+  if (!(Test-Path "$userProfile\.ssh")) {
+    mkdir "$userProfile\.ssh"
   }
-  wget https://api.github.com/users/$GitHubUsername/keys -UseBasicParsing | ConvertFrom-Json | foreach { $_.key } | Out-File $env:USERPROFILE\.ssh\authorized_keys -encoding ASCII -append
+  wget https://api.github.com/users/$GitHubUsername/keys -UseBasicParsing | ConvertFrom-Json | foreach { $_.key } | Out-File $userProfile\.ssh\authorized_keys -encoding ASCII -append
 }
 
 #Restart Docker Service
