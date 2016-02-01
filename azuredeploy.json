@@ -24,14 +24,6 @@
       }
     },
 
-    "GitHubUsername": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "GitHub Username to retrieve public SSH keys from."
-      }
-    },
-
     "dnsNameForPublicIP": {
       "type": "string",
       "metadata": {
@@ -128,7 +120,7 @@
               "description": "Docker",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "2376",
+              "destinationPortRange": "2375",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
@@ -312,7 +304,7 @@
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
 								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
               ],
-     	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'),' ',parameters('GitHubUsername'))]"
+     	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'))]"
             }
           }
         }

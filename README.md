@@ -11,12 +11,16 @@ This template will deploy and configure a Windows Server 2016 TP4 core VM instan
 
 * Deploy the TP4 Windows Server Container Image
 * Run the Docker Engine
-* Open Ports for RDP, WinRM (HTTPS) and Docker (HTTPS).
+* Open Ports for SSH, RDP, WinRM (HTTPS) and Docker (HTTP unsecure).
+* Install OpenSSH
+  * Adds the SSH public key of a given GitHub user for password-less login
 * Install additional Docker tools:
   * Docker Compose 1.5.2
   * Docker Machine 0.5.6
 
 Windows Server 2016 TP4 and Windows Server Container are in an early preview release and are not production ready and or supported.
+
+The Docker Engine is started without TLS certificates. Do not run this production.
 
 > Microsoft Azure does not support Hyper-V containers. To complete Hyper-V Container exercises, you need an on-prem container host.
 

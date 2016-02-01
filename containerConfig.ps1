@@ -1,15 +1,7 @@
-#################################################################################################################################
-#  Name        : Configure-WinRM.ps1                                                                                            #
-#                                                                                                                               #
-#  Description : Configures the WinRM on a local machine                                                                        #
-#                                                                                                                               #
-#  Arguments   : HostName, specifies the FQDN of machine or domain                                                           #
-#################################################################################################################################
-
+#  Arguments : HostName, specifies the FQDN of machine or domain
 param
 (
     [string] $HostName = $(throw "HostName is required."),
-    [string] $GitHubUsername = ""
 )
 
 $Logfile = "C:\containerConfig.log"
@@ -23,7 +15,6 @@ function LogWrite {
 
 LogWrite "containerConfig.ps1"
 LogWrite "HostName = $($HostName)"
-LogWrite "GitHubUsername = $($GitHubUsername)"
 LogWrite "USERPROFILE = $($env:USERPROFILE)"
 LogWrite "pwd = $($pwd)"
 
@@ -32,7 +23,7 @@ $DockerConfig = 'C:\ProgramData\Docker\runDockerDaemon.cmd'
 #Set RDP and Docker Firewall Rules:
 
 if (!(Get-NetFirewallRule | where {$_.Name -eq "Docker"})) {
-    New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2376 -Action Allow -Enabled True
+    New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2375 -Action Allow -Enabled True
 }
 
 if (!(Get-NetFirewallRule | where {$_.Name -eq "SSH"})) {
@@ -52,17 +43,18 @@ Start-Service sshd
 Set-Service sshd -StartupType Automatic
 Pop-Location
 
-# Insert public SSH keys of given GitHub user
-$userProfile = "C:\Users\docker"
-if ($GitHubUsername -ne "") {
-  if (!(Test-Path "$userProfile\.ssh")) {
-    mkdir "$userProfile\.ssh"
-  }
-  wget https://api.github.com/users/$GitHubUsername/keys -UseBasicParsing | ConvertFrom-Json | foreach { $_.key } | Out-File $userProfile\.ssh\authorized_keys -encoding ASCII -append
+#Modify Docker Daemon Configuration
+if (!($file = Get-Item -Path $DockerConfig)) {
+    Write-Verbose "Docker Daemon Command File Missing" -Verbose
+}
+else {
+    $file = Get-Content $DockerConfig
+    $file = $file -replace '^docker daemon -D -b "Virtual Switch"$','docker daemon -D -b "Virtual Switch" -H 0.0.0.0:2375'
+    Set-Content -Path $DockerConfig -Value $file
 }
 
 #Restart Docker Service
-#Restart-Service Docker
+Restart-Service Docker
 
 # Install Chocolatey
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
