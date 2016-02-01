@@ -1,7 +1,7 @@
 #  Arguments : HostName, specifies the FQDN of machine or domain
 param
 (
-    [string] $HostName = $(throw "HostName is required."),
+    [string] $HostName = $(throw "HostName is required.")
 )
 
 $Logfile = "C:\containerConfig.log"
