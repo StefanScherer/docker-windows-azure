@@ -44,12 +44,48 @@ azure group deployment create Group docker-tp4 \
 To retrieve the IP address or the FQDN use these commands
 
 ```bash
-$ azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3
+azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3
 1.2.3.4
 
-$ azure vm show Group docker-tp4 | grep FQDN | cut -d : -f 3 | head -1
+azure vm show Group docker-tp4 | grep FQDN | cut -d : -f 3 | head -1
 docker-tp4.northeurope.cloudapp.azure.com
 ```
+
+## Connect to Docker Engine
+
+To connect to the Windows Docker Engine from a notebook you just have to set the DOCKER_HOST environment variable.
+
+At the moment the connection is unsecured which I want to change in near future in this repo.
+
+### bash
+```bash
+unset DOCKER_MACHINE_NAME
+unset DOCKER_TLS_VERIFY
+unset DOCKER_CERT_PATH
+export DOCKER_HOST=tcp://$(azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3):2375
+```
+
+### PowerShell
+```powershell
+rm env:DOCKER_MACHINE_NAME
+rm env:DOCKER_TLS_VERIFY
+rm env:DOCKER_CERT_PATH
+$env:DOCKER_HOST="tcp://$(azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3):2375"
+```
+
+The thee `unset` commands are useful if you use `docker-machine` to connect to different VM's with TLS. This turns off TLS so you can then run `docker` commands like
+
+```bash
+docker images
+```
+![docker-run-cmd](images/docker-images.png)
+
+or start your first Windows container eg. from your Mac
+
+```bash
+docker run -it windowsservercore cmd
+```
+![docker-run-cmd](images/docker-run-cmd.png)
 
 ## Credits
 
