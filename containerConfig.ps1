@@ -64,6 +64,12 @@ if ($GitHubUsername -ne "") {
 #Restart Docker Service
 #Restart-Service Docker
 
+# Install Chocolatey
+iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+# install docker tools
+choco install -y docker-machine -version 0.5.6
+choco install -y docker-compose -version 1.5.2
+
 .\ConfigureWinRM.ps1 $HostName
 
 # OpenSSH server needs a restart for ssh key based logins
