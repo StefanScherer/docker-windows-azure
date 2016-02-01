@@ -1,1 +1,5 @@
 xx
+*.pem
+*.csr
+*.cnf
+*.srl
