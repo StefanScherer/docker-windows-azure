@@ -15,8 +15,9 @@ This template will deploy and configure a Windows Server 2016 TP4 core VM instan
 * Install OpenSSH
   * Adds the SSH public key of a given GitHub user for password-less login
 * Install additional Docker tools:
-  * Docker Compose 1.5.2
-  * Docker Machine 0.5.6
+  * Docker Compose 1.6.0
+  * Docker Machine 0.6.0
+* Updates the Docker Engine to the TP4 version of Nov 23th 2015 to be able to pull images
 
 Windows Server 2016 TP4 and Windows Server Container are in an early preview release and are not production ready and or supported.
 
@@ -26,7 +27,7 @@ The Docker Engine is started without TLS certificates. Do not run this productio
 
 ## azure-cli
 
-Additional to the "Deploy to Azure" button abvoe you can deploy the VM with the `azure` cli as well:
+Additional to the "Deploy to Azure" button above you can deploy the VM with the `azure` cli as well:
 
 ```
 azure config mode arm

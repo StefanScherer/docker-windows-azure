@@ -20,7 +20,7 @@ LogWrite "pwd = $($pwd)"
 
 $DockerConfig = 'C:\ProgramData\Docker\runDockerDaemon.cmd'
 
-#Set RDP and Docker Firewall Rules:
+#Set Docker and SSH Firewall Rules:
 
 if (!(Get-NetFirewallRule | where {$_.Name -eq "Docker"})) {
     New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2375 -Action Allow -Enabled True
@@ -53,14 +53,16 @@ else {
     Set-Content -Path $DockerConfig -Value $file
 }
 
-#Restart Docker Service
-Restart-Service Docker
+#Update Docker Engine to official TP4 to allow pull
+Stop-Service docker
+wget "https://aka.ms/tp4/docker" -outfile C:\windows\system32\docker.exe
+Start-Service Docker
 
 # Install Chocolatey
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 # install docker tools
-choco install -y docker-machine -version 0.5.6
-choco install -y docker-compose -version 1.5.2
+choco install -y docker-machine -version 0.6.0
+choco install -y docker-compose -version 1.6.0
 
 .\ConfigureWinRM.ps1 $HostName
 
