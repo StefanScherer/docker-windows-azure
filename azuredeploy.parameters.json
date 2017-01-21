@@ -13,9 +13,6 @@
         },
         "adminPassword": {
             "value": "password"
-        },
-        "location": {
-            "value": "North Europe"
         }
     }
 }
