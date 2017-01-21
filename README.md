@@ -7,23 +7,16 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template will deploy and configure a Windows Server 2016 TP4 core VM instance with Windows Server Containers and Docker Engine. These items are performed by the template:
+This template will deploy and configure a Windows Server 2016 VM instance with Windows Server Containers and Docker Engine 1.13.0. These items are performed by the template:
 
-* Deploy the TP4 Windows Server Container Image
-* Run the Docker Engine
-* Open Ports for SSH, RDP, WinRM (HTTPS) and Docker (HTTP unsecure).
-* Install OpenSSH
-  * Adds the SSH public key of a given GitHub user for password-less login
+* Deploy the prepared Windows Server Container Image with Docker 1.13.0
+  * base OS image microsoft/windowsservercore:10.0.14393.693
+  * base OS image microsoft/nanoserver:10.0.14393.693
+* Create TLS certificates for the Docker Engine
+* Open Ports for RDP and Docker (HTTP secure).
 * Install additional Docker tools:
-  * Docker Compose 1.6.0
-  * Docker Machine 0.6.0
-* Updates the Docker Engine to the TP4 version of Nov 23th 2015 to be able to pull images
-
-Windows Server 2016 TP4 and Windows Server Container are in an early preview release and are not production ready and or supported.
-
-The Docker Engine is started without TLS certificates. Do not run this production.
-
-> Microsoft Azure does not support Hyper-V containers. To complete Hyper-V Container exercises, you need an on-prem container host.
+  * Docker Compose 1.10.0
+  * Docker Machine 0.9.0
 
 ## azure-cli
 
@@ -31,13 +24,13 @@ Additional to the "Deploy to Azure" button above you can deploy the VM with the 
 
 ```
 azure config mode arm
-azure group deployment create Group docker-tp4 \
+azure group deployment create Group docker \
   --template-uri https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/azuredeploy.json \
   -p '{
     "adminUsername": {"value": "docker"},
     "adminPassword": {"value": "Super$ecretPass123"},
-    "dnsNameForPublicIP": {"value": "docker-tp4"},
-    "VMName": {"value": "docker-tp4"},
+    "dnsNameForPublicIP": {"value": "docker"},
+    "VMName": {"value": "docker"},
     "location": {"value": "North Europe"}
     }'
 ```
@@ -45,34 +38,17 @@ azure group deployment create Group docker-tp4 \
 To retrieve the IP address or the FQDN use these commands
 
 ```bash
-azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3
+azure vm show Group docker | grep "Public IP address" | cut -d : -f 3
 1.2.3.4
 
-azure vm show Group docker-tp4 | grep FQDN | cut -d : -f 3 | head -1
-docker-tp4.northeurope.cloudapp.azure.com
+azure vm show Group docker | grep FQDN | cut -d : -f 3 | head -1
+docker.northeurope.cloudapp.azure.com
 ```
 
 ## Connect to Docker Engine
 
-To connect to the Windows Docker Engine from a notebook you just have to set the DOCKER_HOST environment variable.
-
-At the moment the connection is unsecured which I want to change in near future in this repo.
-
-### bash
-```bash
-unset DOCKER_MACHINE_NAME
-unset DOCKER_TLS_VERIFY
-unset DOCKER_CERT_PATH
-export DOCKER_HOST=tcp://$(azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3):2375
-```
-
-### PowerShell
-```powershell
-rm env:DOCKER_MACHINE_NAME
-rm env:DOCKER_TLS_VERIFY
-rm env:DOCKER_CERT_PATH
-$env:DOCKER_HOST="tcp://$(azure vm show Group docker-tp4 | grep "Public IP address" | cut -d : -f 3):2375"
-```
+To connect to the Windows Docker Engine from a notebook you just have to copy the TLS certificates
+for the user's profile to your home directory.
 
 The thee `unset` commands are useful if you use `docker-machine` to connect to different VM's with TLS. This turns off TLS so you can then run `docker` commands like
 

@@ -36,6 +36,7 @@
       "allowedValues": [
         "East US",
         "West US",
+        "West Europe",
         "North Europe",
         "East Asia",
         "Southeast Asia"
@@ -55,9 +56,6 @@
   },
 
   "variables": {
-    "windowsOSVersion": "2016-Technical-Preview-with-Containers",
-    "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
     "OSDiskName": "[concat(parameters('VMName'),'_osdisk')]",
     "nicName": "[concat(parameters('VMName'),'_nic')]",
     "addressPrefix": "10.0.0.0/16",
@@ -120,30 +118,14 @@
               "description": "Docker",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "2375",
+              "destinationPortRange": "2376",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 300,
               "direction": "Inbound"
             }
-          },
-
-          {
-            "name": "WinRM",
-            "properties": {
-              "description": "WinRM",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "5986",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 400,
-              "direction": "Inbound"
-            }
           }
-
         ]
       }
     },
@@ -257,19 +239,18 @@
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[variables('windowsOSVersion')]",
-            "version": "latest"
-          },
           "osDisk": {
-            "name": "osdisk",
+            "osType": "Windows",
+            "name": "osdik",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "image": {
+              "uri": "https://vagrantboxes.blob.core.windows.net/system/Microsoft.Compute/Images/images/packer-osDisk.be7db6fc-0c0f-4f23-8c7f-6929971c2b76.vhd?se=2017-02-21T18%3A20%3A24Z&sig=A4snDwRSqwFiAf0%2FaQqwjOs3y61r6Cj%2FxEXVjaTxKjI%3D&sp=r&sr=b&sv=2015-02-21"
+            },
             "vhd": {
               "uri": "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
             },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+            "caching": "ReadWrite"
           }
         },
         "networkProfile": {
@@ -299,10 +280,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1",
-  							"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1",
-								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe",
-								"https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1"
               ],
      	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'))]"
             }

@@ -13,58 +13,56 @@ function LogWrite {
    Write-Host $logstring
 }
 
+function Get-HostToIP($hostname) {
+  $result = [system.Net.Dns]::GetHostByName($hostname)
+  $result.AddressList | ForEach-Object {$_.IPAddressToString }
+}
+
+$PublicIPAddress = Get-HostToIP($HostName)
+
 LogWrite "containerConfig.ps1"
 LogWrite "HostName = $($HostName)"
+LogWrite "PublicIPAddress = $($PublicIPAddress)"
 LogWrite "USERPROFILE = $($env:USERPROFILE)"
 LogWrite "pwd = $($pwd)"
 
-$DockerConfig = 'C:\ProgramData\Docker\runDockerDaemon.cmd'
-
-#Set Docker and SSH Firewall Rules:
-
+# Set Docker Firewall Rules:
 if (!(Get-NetFirewallRule | where {$_.Name -eq "Docker"})) {
-    New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2375 -Action Allow -Enabled True
+  New-NetFirewallRule -Name "Docker" -DisplayName "Docker" -Protocol tcp -LocalPort 2376
 }
 
-if (!(Get-NetFirewallRule | where {$_.Name -eq "SSH"})) {
-    New-NetFirewallRule -Name "SSH" -DisplayName "SSH" -Protocol tcp -LocalPort 22 -Action Allow -Enabled True
+if (!(Test-Path $env:USERPROFILE\.docker)) {
+  mkdir $env:USERPROFILE\.docker
 }
 
-# Install OpenSSH
-# see also https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH
-wget https://github.com/PowerShell/Win32-OpenSSH/releases/download/12_22_2015/OpenSSH-Win64.zip -Out OpenSSH-Win64.zip -UseBasicParsing
-Expand-Archive OpenSSH-Win64.zip "C:\Program Files" -Force
-Push-Location "C:\Program Files\OpenSSH-Win64"
-.\ssh-keygen.exe -A
-copy "C:\Program Files\OpenSSH-Win64\x64\ssh-lsa.dll" C:\Windows\system32\
-cmd /c setup-ssh-lsa.cmd
-.\sshd.exe install
-Start-Service sshd
-Set-Service sshd -StartupType Automatic
-Pop-Location
+$ips = ((Get-NetIPAddress -AddressFamily IPv4).IPAddress) -Join ','
+LogWrite "Creating certs for $ips,$PublicIPAddress"
 
-#Modify Docker Daemon Configuration
-if (!($file = Get-Item -Path $DockerConfig)) {
-    Write-Verbose "Docker Daemon Command File Missing" -Verbose
-}
-else {
-    $file = Get-Content $DockerConfig
-    $file = $file -replace '^docker daemon -D -b "Virtual Switch"$','docker daemon -D -b "Virtual Switch" -H 0.0.0.0:2375'
-    Set-Content -Path $DockerConfig -Value $file
-}
+docker run --rm `
+  -e SERVER_NAME=$(hostname) `
+  -e IP_ADDRESSES=$ips,$PublicIPAddress `
+  -v "C:\ProgramData\docker:C:\ProgramData\docker" `
+  -v "$env:USERPROFILE\.docker:C:\Users\ContainerAdministrator\.docker" `
+  stefanscherer/dockertls-windows
 
-#Update Docker Engine to official TP4 to allow pull
-Stop-Service docker
-wget "https://aka.ms/tp4/docker" -outfile C:\windows\system32\docker.exe
-Start-Service Docker
+# get rid of old -H options that would conflict with daemon.json
+stop-service docker
+dockerd --unregister-service
+dockerd --register-service
+
+# add group docker in daemon.json as it got lost with the unregister-service call
+$daemonJson = "C:\ProgramData\docker\config\daemon.json"
+$config = (Get-Content $daemonJson) -join "`n" | ConvertFrom-Json
+$config = $config | Add-Member(@{ `
+  group = "docker" `
+  }) -Force -PassThru
+LogWrite "`n=== Creating / Updating $daemonJson"
+$config | ConvertTo-Json | Set-Content $daemonJson -Encoding Ascii
+
+start-service docker
 
 # Install Chocolatey
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 # install docker tools
-choco install -y docker-machine -version 0.6.0
-choco install -y docker-compose -version 1.6.0
-
-.\ConfigureWinRM.ps1 $HostName
-
-# OpenSSH server needs a restart for ssh key based logins
-Restart-Computer
+choco install -y docker-machine -version 0.9.0
+choco install -y docker-compose -version 1.10.0
