@@ -227,7 +227,6 @@
           "osDisk": {
             "osType": "Windows",
             "name": "osdik",
-            "caching": "ReadWrite",
             "createOption": "FromImage",
             "image": {
               "uri": "https://vagrantboxes.blob.core.windows.net/system/Microsoft.Compute/Images/images/packer-osDisk.be7db6fc-0c0f-4f23-8c7f-6929971c2b76.vhd?se=2017-02-21T18%3A20%3A24Z&sig=A4snDwRSqwFiAf0%2FaQqwjOs3y61r6Cj%2FxEXVjaTxKjI%3D&sp=r&sr=b&sv=2015-02-21"
