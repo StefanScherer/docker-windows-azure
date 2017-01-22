@@ -47,13 +47,10 @@
     "subnetName": "[concat(parameters('VMName'),'_subnet')]",
     "subnetPrefix": "10.0.0.0/24",
     "networkSecurityGroupName": "[concat(parameters('VMName'),'_nsg')]",
-    "newStorageAccountName": "[concat(uniqueString(resourceGroup().id),'winrmsa')]",
-    "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "[concat(parameters('VMName'),'_pubip')]",
     "publicIPAddressType": "Dynamic",
     "hostDNSNameScriptArgument": "[concat('*.',resourceGroup().location,'.cloudapp.azure.com')]",
-    "vmStorageAccountContainerName": "vhds",
-    "apiVersion": "2015-05-01-preview",
+    "apiVersion": "2016-01-01",
     "virtualNetworkName": "[concat(parameters('VMName'),'_vnet')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
@@ -67,21 +64,6 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
-          {
-            "name": "SSH",
-            "properties": {
-              "description": "SSH",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          },
-
           {
             "name": "RDP",
             "properties": {
@@ -113,16 +95,6 @@
           }
         ]
       }
-    },
-
-    {
-        "type": "Microsoft.Storage/storageAccounts",
-        "name": "[variables('newStorageAccountName')]",
-        "apiVersion": "[variables('apiVersion')]",
-        "location": "[resourceGroup().location]",
-        "properties": {
-            "accountType": "[variables('storageAccountType')]"
-        }
     },
 
     {
@@ -211,7 +183,6 @@
         "displayName": "VirtualMachine"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "properties": {
@@ -232,7 +203,7 @@
               "uri": "https://westerndog.blob.core.windows.net/vhds/WindowsServer2016Docker.20170122-osDisk.vhd"
             },
             "vhd": {
-              "uri": "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+              "uri": "[concat('http://westerndog.blob.core.windows.net/vhds/',variables('OSDiskName'),'.vhd')]"
             },
             "caching": "ReadWrite"
           }
