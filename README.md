@@ -7,16 +7,16 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template will deploy and configure a Windows Server 2016 VM instance with Windows Server Containers and Docker Engine 1.13.0. These items are performed by the template:
+This template will deploy and configure a Windows Server 2016 VM instance with Windows Server Containers and Docker Engine 17.10.0 EE preview 3. These items are performed by the template:
 
-* Deploy the prepared Windows Server Container Image with Docker 1.13.0
-  * base OS image microsoft/windowsservercore:10.0.14393.693
-  * base OS image microsoft/nanoserver:10.0.14393.693
+* Deploy the prepared Windows Server Container Image with Docker 17.10.0 EE preview 3
+  * base OS image microsoft/windowsservercore:10.0.14393.x
+  * base OS image microsoft/nanoserver:10.0.14393.x
 * Create TLS certificates for the Docker Engine
-* Open Ports for RDP and Docker (HTTP secure).
+* Open Ports for RDP and Docker (HTTP secure), HTTP 80, HTTPS 443.
 * Install additional Docker tools:
-  * Docker Compose 1.10.0
-  * Docker Machine 0.9.0
+  * Docker Compose
+  * Docker Machine
 
 ## azure-cli
 
