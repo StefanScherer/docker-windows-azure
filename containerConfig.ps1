@@ -52,11 +52,6 @@ if (!$machineIp) {
   $ipAddresses = "$ipAddresses,$machineIp"
 }
 
-$homeDir = $machineHome
-if ($machineHome.startsWith('/')) {
-  $homeDir = "C:$machineHome" # /Users/stefan from Mac -> C:/Users/stefan
-}
-
 function ensureDirs($dirs) {
   foreach ($dir in $dirs) {
     if (!(Test-Path $dir)) {
@@ -281,11 +276,11 @@ if ($machineName) {
   createMachineConfig $machineName $machineHome $machinePath $machineIp $serverCertsPath $clientCertsPath
 }
 
-LogWrite "Copying Docker Machine configuration to $homeDir\.docker\machine\machines\$machineName"
-if (Test-Path "$homeDir\.docker\machine\machines\$machineName") {
-  rm -recurse "$homeDir\.docker\machine\machines\$machineName"
+LogWrite "Copying Docker Machine configuration to $env:SystemDrive\.docker\machine\machines\$machineName"
+if (Test-Path "$env:SystemDrive\.docker\machine\machines\$machineName") {
+  rm -recurse "$env:SystemDrive\.docker\machine\machines\$machineName"
 }
-Copy-Item -Recurse "$env:USERPROFILE\.docker\machine\machines\$machineName" "$homeDir\.docker\machine\machines\$machineName"
+Copy-Item -Recurse "$env:USERPROFILE\.docker\machine\machines\$machineName" "$env:SystemDrive\.docker\machine\machines\$machineName"
 
 LogWrite "Restarting Docker"
 stop-service docker
