@@ -21,8 +21,8 @@
 These templates will deploy and configure a Windows Server 2016/1709 VM instance with Windows Server Containers and Docker Engine 17.10.0 EE preview 3. These items are performed by the template:
 
 * Deploy the prepared Windows Server Container Image with Docker 17.10.0 EE preview 3
-  * base OS image microsoft/windowsservercore:10.0.14393.x
-  * base OS image microsoft/nanoserver:10.0.14393.x
+  * base OS image microsoft/windowsservercore:*
+  * base OS image microsoft/nanoserver:*
 * Create TLS certificates for the Docker Engine
 * Prepare a `docker-machine` configuration in `C:\.docker\machine\machines`
 * Open Ports for RDP (3389), Docker (2376), as well as HTTP (80) and HTTPS (443).
