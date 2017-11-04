@@ -25,7 +25,7 @@ These templates will deploy and configure a Windows Server 2016/1709 VM instance
   * base OS image microsoft/nanoserver:10.0.14393.x
 * Create TLS certificates for the Docker Engine
 * Prepare a `docker-machine` configuration in `C:\.docker\machine\machines`
-* Open Ports for RDP and Docker (HTTP secure), HTTP 80, HTTPS 443.
+* Open Ports for RDP (3389), Docker (2376), as well as HTTP (80) and HTTPS (443).
 * Install additional Docker tools:
   * Docker Compose
   * Docker Machine
