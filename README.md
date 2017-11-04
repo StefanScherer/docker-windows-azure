@@ -24,44 +24,30 @@ These templates will deploy and configure a Windows Server 2016/1709 VM instance
   * base OS image microsoft/windowsservercore:10.0.14393.x
   * base OS image microsoft/nanoserver:10.0.14393.x
 * Create TLS certificates for the Docker Engine
+* Prepare a `docker-machine` configuration in `C:\.docker\machine\machines`
 * Open Ports for RDP and Docker (HTTP secure), HTTP 80, HTTPS 443.
 * Install additional Docker tools:
   * Docker Compose
   * Docker Machine
 
-## azure-cli
-
-Additional to the "Deploy to Azure" button above you can deploy the VM with the `azure` cli as well:
-
-```
-azure config mode arm
-azure group deployment create Group docker \
-  --template-uri https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/2016/azuredeploy.json \
-  -p '{
-    "adminUsername": {"value": "docker"},
-    "adminPassword": {"value": "Super$ecretPass123"},
-    "dnsNameForPublicIP": {"value": "docker"},
-    "VMName": {"value": "docker"},
-    "location": {"value": "North Europe"}
-    }'
-```
-
-To retrieve the IP address or the FQDN use these commands
-
-```bash
-azure vm show Group docker | grep "Public IP address" | cut -d : -f 3
-1.2.3.4
-
-azure vm show Group docker | grep FQDN | cut -d : -f 3 | head -1
-docker.northeurope.cloudapp.azure.com
-```
-
 ## Connect to Docker Engine
 
 To connect to the Windows Docker Engine from a notebook you just have to copy the TLS certificates
-for the user's profile to your home directory.
+from the Azure VM `C:\.docker\machine\machines` to your home directory -> `.docker/machine/machines`.
 
-The thee `unset` commands are useful if you use `docker-machine` to connect to different VM's with TLS. This turns off TLS so you can then run `docker` commands like
+Now you can use the local `docker-machine` binary to switch environment variables to connect to the Docker engine running in the Azure VM.
+
+Bash
+```bash
+$ eval $(docker-machine env az1709)
+```
+
+PowerShell
+```bash
+PS C:\> docker-machine env az1709 | iex
+```
+
+Now you are connected with the TLS protected Docker API of your Azure VM.
 
 ```bash
 docker images
@@ -71,7 +57,7 @@ docker images
 or start your first Windows container eg. from your Mac
 
 ```bash
-docker run -it windowsservercore cmd
+docker run -it microsoft/windowsservercore:1709 cmd
 ```
 ![docker-run-cmd](images/docker-run-cmd.png)
 
