@@ -33,7 +33,7 @@ These templates will deploy and configure a Windows Server 2016/1709 VM instance
 ## Connect to Docker Engine
 
 To connect to the Windows Docker Engine from a notebook you just have to copy the TLS certificates
-from the Azure VM `C:\.docker\machine\machines` to your home directory -> `.docker/machine/machines`.
+from the Azure VM `C:\.docker\machine\machines` to your home directory -> `.docker/machine/machines`. Use the RDP session and copy the folder through RDP. For 1709 server core it is also possible. Just open `notepad`, then `Open` a file, browse to `C:\.docker` and CTRL+C the folder.
 
 Now you can use the local `docker-machine` binary to switch environment variables to connect to the Docker engine running in the Azure VM.
 
