@@ -1,13 +1,24 @@
 # docker-windows-azure
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2Fazuredeploy.json" target="_blank">
+## Windows Server 2016 LTS channel
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F2016%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F2016%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template will deploy and configure a Windows Server 2016 VM instance with Windows Server Containers and Docker Engine 17.10.0 EE preview 3. These items are performed by the template:
+## Windows Server 1709 Semi-annual channel
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F1709%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F1709%2Fazuredeploy.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
+</a>
+
+## Deployment
+
+These templates will deploy and configure a Windows Server 2016/1709 VM instance with Windows Server Containers and Docker Engine 17.10.0 EE preview 3. These items are performed by the template:
 
 * Deploy the prepared Windows Server Container Image with Docker 17.10.0 EE preview 3
   * base OS image microsoft/windowsservercore:10.0.14393.x
@@ -25,7 +36,7 @@ Additional to the "Deploy to Azure" button above you can deploy the VM with the 
 ```
 azure config mode arm
 azure group deployment create Group docker \
-  --template-uri https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/azuredeploy.json \
+  --template-uri https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/2016/azuredeploy.json \
   -p '{
     "adminUsername": {"value": "docker"},
     "adminPassword": {"value": "Super$ecretPass123"},
