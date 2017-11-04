@@ -3,5 +3,5 @@
   "description": "This template will create a Windows Server 2016 VM instance with Windows Server Containers. The template will also create the inbound rules for RDP and Docker traffic.",
   "summary": "Provision a Docker ready Windows Server Container Host",
   "githubUsername": "StefanScherer",
-  "dateUpdated": "2017-01-21"
+  "dateUpdated": "2017-11-04"
 }

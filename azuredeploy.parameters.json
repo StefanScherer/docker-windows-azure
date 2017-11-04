@@ -13,6 +13,12 @@
         },
         "adminPassword": {
             "value": "password"
+        },
+        "machineName": {
+            "value": "az2016"
+        },
+        "machineHome": {
+            "value": "/Users/stefan"
         }
     }
 }
