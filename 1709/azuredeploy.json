@@ -70,7 +70,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "[concat(parameters('VMName'),'_pubip')]",
     "publicIPAddressType": "Dynamic",
-    "hostDNSNameScriptArgument": "[concat('*.',resourceGroup().location,'.cloudapp.azure.com')]",
+    "hostDNSNameScriptArgument": "[concat(parameters('dnsNameForPublicIP'),'.',resourceGroup().location,'.cloudapp.azure.com')]",
     "vmStorageAccountContainerName": "vhds",
     "apiVersion": "2015-05-01-preview",
     "virtualNetworkName": "[concat(parameters('VMName'),'_vnet')]",
