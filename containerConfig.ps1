@@ -1,7 +1,9 @@
-#  Arguments : HostName, specifies the FQDN of machine or domain
+#  Arguments : FQDN, specifies the FQDN of machine or domain
+#              machineName, specifies the docker-machine name
+#              machineHome, specifies your local path to your home directory, eg. /Users/stefan or C:/Users/hugo
 param
 (
-    [string] $HostName = $(throw "HostName is required."),
+    [string] $FQDN = $(throw "FQDN is required."),
     [String] $machineName,
     [String] $machineHome
 )
@@ -20,10 +22,10 @@ function Get-HostToIP($hostname) {
   $result.AddressList | ForEach-Object {$_.IPAddressToString }
 }
 
-$machineIp = Get-HostToIP($HostName)
+$machineIp = Get-HostToIP($FQDN)
 
 LogWrite "containerConfig.ps1"
-LogWrite "HostName = $($HostName)"
+LogWrite "FQDN = $($FQDN)"
 LogWrite "Public machineIp = $($machineIp)"
 LogWrite "USERPROFILE = $($env:USERPROFILE)"
 LogWrite "pwd = $($pwd)"
@@ -267,13 +269,14 @@ $serverCertsPath = "$dockerData\certs.d"
 $clientCertsPath = "$userPath"
 $rootCert = createCA "$dockerData\certs.d"
 
-createCerts $rootCert $serverCertsPath $HostName $ipAddresses $clientCertsPath
+createCerts $rootCert $serverCertsPath $FQDN $ipAddresses $clientCertsPath
 updateConfig "$dockerData\config\daemon.json" $serverCertsPath
 
 if ($machineName) {
   $machinePath = "$env:USERPROFILE\.docker\machine\machines\$machineName"
   ensureDirs @($machinePath)
-  createMachineConfig $machineName $machineHome $machinePath $machineIp $serverCertsPath $clientCertsPath
+  # Use $FQDN as "IPAddress" ($machineIp) in config.json
+  createMachineConfig $machineName $machineHome $machinePath $FQDN $serverCertsPath $clientCertsPath
 }
 
 LogWrite "Copying Docker Machine configuration to $env:SystemDrive\.docker\machine\machines\$machineName"
