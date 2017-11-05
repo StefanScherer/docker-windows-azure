@@ -267,7 +267,7 @@ $serverCertsPath = "$dockerData\certs.d"
 $clientCertsPath = "$userPath"
 $rootCert = createCA "$dockerData\certs.d"
 
-createCerts $rootCert $serverCertsPath $serverName $ipAddresses $clientCertsPath
+createCerts $rootCert $serverCertsPath $HostName $ipAddresses $clientCertsPath
 updateConfig "$dockerData\config\daemon.json" $serverCertsPath
 
 if ($machineName) {
