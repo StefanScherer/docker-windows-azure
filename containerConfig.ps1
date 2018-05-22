@@ -30,13 +30,13 @@ LogWrite "Public machineIp = $($machineIp)"
 LogWrite "USERPROFILE = $($env:USERPROFILE)"
 LogWrite "pwd = $($pwd)"
 
-LogWrite "Update to Docker 17.10.0 EE preview 3"
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module -Name DockerProvider -Force
-Set-PSRepository -InstallationPolicy Trusted -Name PSGallery
-$ErrorActionStop = 'SilentlyContinue'
-Install-Package -Name docker -ProviderName DockerProvider -RequiredVersion preview -Force
-Set-PSRepository -InstallationPolicy Untrusted -Name PSGallery
+# LogWrite "Update to Docker 17.10.0 EE preview 3"
+# Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+# Install-Module -Name DockerProvider -Force
+# Set-PSRepository -InstallationPolicy Trusted -Name PSGallery
+# $ErrorActionStop = 'SilentlyContinue'
+# Install-Package -Name docker -ProviderName DockerProvider -RequiredVersion preview -Force
+# Set-PSRepository -InstallationPolicy Untrusted -Name PSGallery
 $ErrorActionStop = 'Stop'
 
 if (!(Test-Path $env:USERPROFILE\.docker)) {

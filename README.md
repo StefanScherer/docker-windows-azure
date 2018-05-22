@@ -18,11 +18,20 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
+## Windows Server 1803 Semi-annual channel
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F1803%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F1803%2Fazuredeploy.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
+</a>
+
 ## Deployment
 
-These templates will deploy and configure a Windows Server 2016/1709 VM instance with Windows Server Containers and Docker Engine 17.10.0 EE preview 3. These items are performed by the template:
+These templates will deploy and configure a Windows Server 2016/1709 VM instance with Windows Server Containers and Docker Engine 17.06.2-ee-10. These items are performed by the template:
 
-* Deploy the prepared Windows Server Container Image with Docker 17.10.0 EE preview 3
+* Deploy the prepared Windows Server Container Image with Docker 17.06.2 EE 10
   * base OS image microsoft/windowsservercore:\*
   * base OS image microsoft/nanoserver:\*
 * Create TLS certificates for the Docker Engine
