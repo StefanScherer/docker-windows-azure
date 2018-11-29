@@ -9,7 +9,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-## Windows Server 2019 LTS channel
+## Windows Server 2016 LTS channel
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStefanScherer%2Fdocker-windows-azure%2Fmaster%2F2016%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
