@@ -59,7 +59,7 @@
   "variables": {
     "windowsOSVersion": "Datacenter-Core-1903-with-Containers-smalldisk",
     "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServerSemiAnnual",
+    "imageOffer": "WindowsServer",
     "OSDiskName": "[concat(parameters('VMName'),'_osdisk')]",
     "nicName": "[concat(parameters('VMName'),'_nic')]",
     "addressPrefix": "10.0.0.0/16",
