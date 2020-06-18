@@ -297,7 +297,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/master/containerConfig.ps1"
+                "https://raw.githubusercontent.com/StefanScherer/docker-windows-azure/main/containerConfig.ps1"
               ],
      	 			  "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file containerConfig.ps1 ',variables('hostDNSNameScriptArgument'),' ',parameters('machineName'),' ',parameters('machineHome'))]"
             }
